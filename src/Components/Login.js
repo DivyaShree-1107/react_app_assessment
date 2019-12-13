@@ -1,75 +1,105 @@
-// import React, { Component } from 'react';
-// // import {connect} from 'react-redux';
-// // import {onhandleChange,check} from '../Actions/Task6Actions';
-// // import Navbar from '../Navbar/Navbar';
+import React, { Component } from 'react';
+// import '../Components/Register.css';
+import browserHistory from '../Utils/browserHistroy' ;
 
-// class Login extends Component {
-//     render() {
-//         return (
-//             // <div>
-//             //     <div>
-//             //         <table>
-//             //             <tr>
-//             //                 <td>User Name</td>
-//             //                 <td><input type="text"/></td>
-//             //             </tr>
-//             //             <tr>
-//             //                 <td>Password</td>
-//             //                 <td><input type="password"/></td>
-//             //             </tr>
-//             //             <tr>
-//             //                 <td><button>Login</button></td>
-//             //                 <td><button>Register</button></td>
-//             //             </tr>
-//             //         </table>
-//             //     </div>
-//             // </div>
-//         );
-//     }
-// }
+class Login extends Component {
+    constructor() {
+    super();
+    this.state = {
+    fields: {},
+    errors: {}
+    }
 
-// export default Login;
-// import React from 'react'
-// import { Field, reduxForm } from 'redux-form'
-// import submit from './submit'
+    this.handleChange = this.handleChange.bind(this);
+    this.submituserRegistrationForm = this.submituserRegistrationForm.bind(this);
 
-// const renderField = ({ input, label, type, meta: { touched, error } }) => (
-//   <div>
-//     <label>{label}</label>
-//     <div>
-//       <input {...input} placeholder={label} type={type} />
-//       {touched && error && <span>{error}</span>}
-//     </div>
-//   </div>
-// )
+    };
 
-// const SubmitValidationForm = props => {
-//   const { error, handleSubmit, pristine, reset, submitting } = props
-//   return (
-//     <form onSubmit={handleSubmit(submit)}>
-//       <Field
-//         name="username"
-//         type="text"
-//         component={renderField}
-//         label="Username"
-//       />
-//       <Field
-//         name="password"
-//         type="password"
-//         component={renderField}
-//         label="Password"
-//       />
-//       {error && <strong>{error}</strong>}
-//       <div>
-//         <button type="submit" disabled={submitting}>
-//           Log In
-//         </button>
-//         <button type="button" disabled={pristine || submitting} onClick={reset}>
-//           Clear Values
-//         </button>
-//       </div>
-//     </form>
-//   )
-// }
+    onHandleClick(){
+        browserHistory.push("/reg");
+    }
+    
+    HandleClick(){
+        browserHistory.push("/add");
+    }
 
-// export default reduxForm({form: 'submitValidation'})(SubmitValidationForm)
+    handleChange(e) {
+    let fields = this.state.fields;
+    fields[e.target.name] = e.target.value;
+    this.setState({
+    fields
+    });
+
+    }
+
+    submituserRegistrationForm(e) {
+    e.preventDefault();
+    if (this.validateForm()) {
+    let fields = {};
+    fields["username"] = "";
+    fields["password"] = "";
+    this.setState({fields:fields});
+    alert("Login Successfull");
+    
+    }
+    }
+
+    validateForm() {
+
+    let fields = this.state.fields;
+    let errors = {};
+    let formIsValid = true;
+
+    if (!fields["username"]) {
+    formIsValid = false;
+    errors["mobileno"] = "*Please enter your mobile no.";
+    }
+
+    if (typeof fields["username"] !== "undefined") {
+    if (!fields["username"].match(/^[a-zA-Z ]*$/)) {
+    formIsValid = false;
+    errors["username"] = "*Please enter valid mobile no.";
+    }
+    }
+
+    if (!fields["password"]) {
+    formIsValid = false;
+    errors["password"] = "*Please enter your password.";
+    }
+
+    if (typeof fields["password"] !== "undefined") {
+    if (!fields["password"].match(/^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&]).*$/)) {
+    formIsValid = false;
+    errors["password"] = "*Please enter secure and strong password.";
+    }
+    }
+
+    this.setState({
+    errors: errors
+    });
+    return formIsValid;
+    }
+
+
+render() {
+    return (
+        <div id="main-registration-container">
+            <div id="register">
+                <h3>Login page</h3>
+                <form method="post" name="userRegistrationForm" onSubmit= {this.submituserRegistrationForm} >
+                    <label>User Name:</label>
+                    <input type="text" name="username" value={this.state.fields.username} onChange={this.handleChange} />
+                    <div className="errorMsg">{this.state.errors.username}</div>
+                    <label>Password :</label>
+                    <input type="password" name="password" value={this.state.fields.password} onChange={this.handleChange} />
+                    <div className="errorMsg">{this.state.errors.password}</div>
+                    <input type="submit" onClick={this.HandleClick} className="button" value="Login"/>
+                    <button onClick={this.onHandleClick} className="button">Register</button>
+                </form>
+            </div>
+        </div>
+
+    );
+}
+}
+export default Login;
